@@ -2,10 +2,14 @@ import cohere
 from dataclasses import dataclass
 from get_api_keys import get_api_key_from_trusted_source
 from data_extractor import extract_text_from_pdf, extract_text_from_word_document, extract_text_from_ppt
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 @dataclass
 class CONFIG:
-    COHERE_API_KEY = get_api_key_from_trusted_source(trusted=True)
+    COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 
 pdf_context = extract_text_from_pdf("PDFs/GCPL_Annual_Report_2022_23[1].pdf")
 word_context = extract_text_from_word_document("Word/EC Transcripts Course 6 Rahil Parikh.docx")

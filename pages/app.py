@@ -4,8 +4,12 @@ import sqlite3
 import hashlib
 import uuid
 from dataclasses import dataclass
-from get_api_keys import get_api_key_from_trusted_source
 from data_extractor import extract_text_from_pdf, extract_text_from_word_document, extract_text_from_ppt
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
 
 # Initialize session state
 if 'user' not in st.session_state:
@@ -17,7 +21,7 @@ if 'current_chat_id' not in st.session_state:
 
 @dataclass
 class CONFIG:
-    COHERE_API_KEY = get_api_key_from_trusted_source(trusted=True)
+    COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 
 # Database setup
 conn = sqlite3.connect('user_data.db')
