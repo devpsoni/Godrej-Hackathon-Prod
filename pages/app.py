@@ -209,7 +209,8 @@ What would you like to know about this document?"""
                 st.write(message["content"])
 
     # Chat input
-    if prompt := st.chat_input("Ask a question about the document:"):
+    prompt = st.text_input("Ask a question about the document:", key="chat_input")
+    if prompt:
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.write(prompt)
@@ -220,6 +221,14 @@ What would you like to know about this document?"""
                     response = cohere_output_generation(prompt, context)
                 st.write(response)
                 st.session_state.messages.append({"role": "assistant", "content": response})
+        
+        # Save updated chat
+        if st.session_state.current_chat_id:
+            c.execute("UPDATE chats SET messages=? WHERE id=?", (str(st.session_state.messages), st.session_state.current_chat_id))
+            conn.commit()
+    else:
+        with st.chat_message("assistant"):
+            st.write("Please upload a document before asking questions.")
             
             # Save updated chat
             if st.session_state.current_chat_id:
